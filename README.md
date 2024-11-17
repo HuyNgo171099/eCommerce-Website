@@ -108,7 +108,7 @@ Ensure the following are installed:
     - Added a watermark based on the `last_login` timestamp to manage event-time processing and late data (`.withWatermark("last_login", "2 hours")`). 
     - All of the other `kafka_*_streams` functions worked in a similar way. 
 
-- **Streaming Data Analysis**: The first image below displays the output of the function `analyze_customer_data`. The components of this function include:
+- **Streaming Data Analysis**: The first image below displays the output of the function `analyze_customer_data` (More specifically, the function returned a Spark DataFrame called customerAnalysisDF which was loaded into the collection customer_analysis in the ecommerce_website MongoDB database. The image displays the first few documents of the collection). The components of this function include:
     - `window(col("last_login"), "1 day"`: Created 1-day windows based on the `last_login` timestamp. From the image, it can be seen that the window of the first document starts at `'2024-11-02 00:00:00'` and ends at `'2024-03-11 00:00:00'`, which represents the date November 2nd, 2024. 
     - `groupBy(window(col("last_login"), "1 day"), "gender")`: grouped the streaming data by the unique combinations of the date windows and gender (three available categories: male, female, and other). Thus, for example, if there were five date windows, there would be 15 groups. 
     - `.agg(count("customer_id").alias("total_customers"), max("last_login").alias("last_activity"))`: within each group, counted the total number of customers and found the most recent `last_login` timestamp.
@@ -167,7 +167,7 @@ The images below display how the messages are stored in the Kafka topics.
 <table>
   <tr>
     <td><img src="images/consumers-messages.png" alt="Figure 10: customers" width="400"></td>
-    <td><img src="images/product-messages.png" alt="Figure 11: products" width="400"></td>
+    <td><img src="images/products-messages.png" alt="Figure 11: products" width="400"></td>
   </tr>
   <tr>
     <td><img src="images/transactions-messages.png" alt="Figure 12: transactions" width="400"></td>
@@ -184,5 +184,5 @@ The images below display how the messages are stored in the Kafka topics.
 
 To enhance the depth and functionality of this project, here are some improvements I plan to explore in the future:
 
-- **Real-Time Dashboards**: It would be ideal to connect MongoDB to a visualization tool like Power BI, Tableau, or Grafana to create interactive dashboards which could be used to monitor changes in the key performance metrics. 
+- **Real-Time Dashboards**: It would be ideal to connect MongoDB to a visualization tool like Tableau or Grafana to create interactive dashboards which could be used to monitor changes in the key performance metrics. 
 - **Cloud Integration**: It would be better to migrate the entire pipeline to managed cloud services such as Microsoft Azure for better performance and reliability. 
